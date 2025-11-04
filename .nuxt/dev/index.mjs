@@ -1332,23 +1332,6 @@ async function errorHandler(error, event) {
   // H3 will handle fallback
 }
 
-const script = `
-if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
-  Object.defineProperty(window, '__NUXT_DEVTOOLS_TIME_METRIC__', {
-    value: {},
-    enumerable: false,
-    configurable: true,
-  })
-}
-window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
-`;
-
-const _E8eZ864LT9A5ox9EEQ8VUsyLxEDhnyXLZR6F99ifPQ = (function(nitro) {
-  nitro.hooks.hook("render:html", (htmlContext) => {
-    htmlContext.head.push(`<script>${script}<\/script>`);
-  });
-});
-
 const rootDir = "C:/Users/haiky/N1src";
 
 const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[],"style":[],"script":[],"noscript":[]};
@@ -1442,8 +1425,7 @@ function onConsoleLog(callback) {
 }
 
 const plugins = [
-  _E8eZ864LT9A5ox9EEQ8VUsyLxEDhnyXLZR6F99ifPQ,
-_ri4KUn6hG6WrURfOrGiQYd17mXakCNgIdact6Qm2M
+  _ri4KUn6hG6WrURfOrGiQYd17mXakCNgIdact6Qm2M
 ];
 
 const assets = {};
