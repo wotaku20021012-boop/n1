@@ -5,11 +5,22 @@
         <h1 class="title">パーソナルビューティアプリ</h1>
         <p class="subtitle">ユーザー一人一人に寄り添った商品を提案します✨</p>
         <div class="hero-cta">
-          <NuxtLink to="/about" class="btn primary">一問一答で商品を探す</NuxtLink>
-          <NuxtLink to="/contact" class="btn secondary">お悩みに合わせた商品を提案する</NuxtLink>
+          <button @click="mode = mode === 'chat' ? 'form' : 'chat'" class="btn">
+         {{ mode === 'chat' ? 'フォームで入力する' : 'チャットに戻る' }}
+          </button>
+
         </div>
       </div>
     </header>
+    
+    
+  <section class="container" aria-label="対話エリア" style="margin-top:1.25rem;">
+  <h2 class="section-title">相談する</h2>
+
+  <transition name="fade" mode="out-in">
+    <component :is="mode === 'chat' ? ChatPanel : ChatForm" @submit="onFormSubmit" />
+  </transition>
+</section>
 
     <section class="container features" aria-labelledby="features-heading">
       <h2 id="features-heading" class="section-title">特徴</h2>
@@ -44,18 +55,21 @@
   </main>
 </template>
 
- <NuxtPage />
-
 
 <script setup lang="ts">
-const router = useRouter()
+import ChatPanel from '../components/ChatPanel.vue'
+import ChatForm from '../components/ChatForm.vue'
 
-const goHome = () => router.push('/')
-const goAbout = () => router.push('/about')
-const goContact = () => router.push('/contact')
-</script>
 
+const mode = ref<'chat' | 'form'>('chat')
 const year = new Date().getFullYear()
+
+function onFormSubmit(payload: { problem: string; preference: string }) {
+mode.value = 'chat'
+  console.log('フォーム送信:', payload)
+}
+
+</script>
 
 <style scoped>
 /* 基本レイアウト */

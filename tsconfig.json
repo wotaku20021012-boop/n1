@@ -1,23 +1,36 @@
 {
   "compilerOptions": {
     "target": "ES2020",
+    "module": "ESNext",
     "lib": [
-      "ES2020",
+      "ESNext",
       "DOM"
     ],
     "types": [
       "node",
-      "nuxt"
+      "nuxt",
+      "vite/client"
     ],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "./*"
+      ],
+      "@/*": [
+        "./*"
+      ]
+    },
+    "moduleResolution": "node",
   },
   "include": [
     "nuxt.config.ts",
     "app.vue",
     "app/**/*.vue",
     "pages/**/*.vue",
-    "components/**/*.vue",
+    "components/*.vue",
     ".nuxt/**/*.d.ts",
-    "env.d.ts"
+    "env.d.ts",
+    "**/*.vue"
   ]
 }
