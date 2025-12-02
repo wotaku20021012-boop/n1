@@ -44,9 +44,9 @@
     <section class="container quick-links" aria-labelledby="links-heading">
       <h2 id="links-heading" class="section-title">すぐに始める</h2>
       <ul class="links">
-        <li><NuxtLink to="/">ホーム</NuxtLink></li>
+        <li><NuxtLink to="/">マイページ</NuxtLink></li>
         <li><NuxtLink to="/about">アバウト</NuxtLink></li>
-        <li><NuxtLink to="/contact">問い合わせ</NuxtLink></li>
+        <li><NuxtLink to="/contact">設定</NuxtLink></li>
       </ul>
     </section>
 
