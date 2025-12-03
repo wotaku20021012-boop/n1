@@ -20,11 +20,17 @@
       <p>あなたにおすすめの商品は「{{ result }}」です！ 🎉</p>
       <button @click="reset">もう一度やる</button>
     </div>
+
+    <!-- ▼ ここが追加した【ホームに戻るボタン】 -->
+    <div class="back-area">
+      <NuxtLink to="/" class="back-btn">🏠 ホームに戻る</NuxtLink>
+    </div>
+    <!-- ▲ ここまで追加 -->
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 // 質問データ
 const questions = [
@@ -71,7 +77,7 @@ const currentQuestion = computed(() =>
 function selectChoice(next) {
   if (typeof next === "string") {
     result.value = results[next];
-    currentIndex.value = null; // 質問終了
+    currentIndex.value = null;
   } else {
     currentIndex.value = next;
   }
@@ -105,5 +111,24 @@ function reset() {
 }
 .choices button:hover {
   background: #d0e4ff;
+}
+
+/* ▼ 追加したスタイル */
+.back-area {
+  margin-top: 40px;
+}
+
+.back-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #eee;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.back-btn:hover {
+  background: #ddd;
 }
 </style>
