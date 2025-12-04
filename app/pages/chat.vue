@@ -1,134 +1,98 @@
 <template>
   <div class="chat-panel">
-    <h2>相談する</h2>
+    <h2>相談する（チャット形式）</h2>
 
-    <div class="question-box" v-if="currentQuestion">
-      <p class="question">{{ currentQuestion.text }}</p>
+    <!-- 戻るボタン -->
+    <NuxtLink
+  to="/"
+  class="home-button"
+>
+  ホームへ戻る
+</NuxtLink>
+
+
+    <!-- 質問 -->
+    <div v-if="question">
+      <p>{{ question.text }}</p>
 
       <div class="choices">
-        <button
-          v-for="(choice, index) in currentQuestion.choices"
-          :key="index"
-          @click="selectChoice(choice.next)"
-        >
-          {{ choice.label }}
+        <button v-for="opt in options" :key="opt.id" @click="choose(opt)">
+          {{ opt.text }}
         </button>
       </div>
     </div>
 
-    <div v-else>
-      <p>あなたにおすすめの商品は「{{ result }}」です！ 🎉</p>
-      <button @click="reset">もう一度やる</button>
+    <!-- 結果 -->
+    <div v-else-if="result.length > 0">
+      <h3>おすすめ商品</h3>
+      <ul>
+        <li v-for="item in result" :key="item.id">
+          {{ item.name }}（{{ item.price }}円）
+        </li>
+      </ul>
+      <button @click="reset">もう一度</button>
     </div>
-
-    <!-- ▼ ここが追加した【ホームに戻るボタン】 -->
-    <div class="back-area">
-      <NuxtLink to="/" class="back-btn">🏠 ホームに戻る</NuxtLink>
-    </div>
-    <!-- ▲ ここまで追加 -->
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-// 質問データ
-const questions = [
-  {
-    id: 0,
-    text: "どんなジャンルの商品をお探しですか？",
-    choices: [
-      { label: "スキンケア", next: 1 },
-      { label: "メイク", next: 2 },
-    ],
-  },
-  {
-    id: 1,
-    text: "肌のタイプを教えてください",
-    choices: [
-      { label: "乾燥肌", next: "result1" },
-      { label: "脂性肌", next: "result2" },
-    ],
-  },
-  {
-    id: 2,
-    text: "どんな印象に見せたいですか？",
-    choices: [
-      { label: "ナチュラル", next: "result3" },
-      { label: "華やか", next: "result4" },
-    ],
-  },
-];
+const question = ref(null);
+const options = ref([]);
+const result = ref([]);
 
-const results = {
-  result1: "保湿クリーム",
-  result2: "皮脂コントロールローション",
-  result3: "ナチュラルメイクセット",
-  result4: "グロッシーメイクセット",
-};
+const API = "http://localhost:5215/api/chat"; 
 
-const currentIndex = ref(0);
-const result = ref(null);
+onMounted(() => loadQuestion(1));
 
-const currentQuestion = computed(() =>
-  typeof currentIndex.value === "number" ? questions[currentIndex.value] : null
-);
+async function loadQuestion(id) {
+  const res = await axios.get(`${API}/question/${id}`);
+  question.value = res.data.question;
+  options.value = res.data.options;
+}
 
-function selectChoice(next) {
-  if (typeof next === "string") {
-    result.value = results[next];
-    currentIndex.value = null;
+async function choose(opt) {
+  const res = await axios.get(
+    `${API}/next?questionId=${question.value.id}&optionId=${opt.id}`
+  );
+
+  if (res.data.nextQuestionId) {
+    loadQuestion(res.data.nextQuestionId);
   } else {
-    currentIndex.value = next;
+    result.value = res.data.result;
+    question.value = null;
   }
 }
 
 function reset() {
-  currentIndex.value = 0;
-  result.value = null;
+  result.value = [];
+  loadQuestion(1);
 }
 </script>
 
 <style scoped>
-.chat-panel {
-  max-width: 500px;
-  margin: auto;
-  padding: 20px;
-  text-align: center;
-}
-.question-box {
-  background: #f9fbfc;
-  border-radius: 8px;
-  padding: 16px;
+.back-btn {
+  padding: 6px 12px;
+  margin-bottom: 12px;
+  background: #ddd;
+  border-radius: 6px;
 }
 .choices button {
-  margin: 8px;
+  margin: 6px;
   padding: 8px 16px;
-  background: #e6f0ff;
-  border: 1px solid #b0c4de;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.choices button:hover {
-  background: #d0e4ff;
 }
 
-/* ▼ 追加したスタイル */
-.back-area {
-  margin-top: 40px;
-}
-
-.back-btn {
+.home-button {
   display: inline-block;
-  padding: 10px 20px;
-  background: #eee;
-  border-radius: 6px;
+  padding: 10px 18px;
+  background: #4a90e2;
+  color: white;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
   text-decoration: none;
-  color: #333;
-  border: 1px solid #ccc;
 }
 
-.back-btn:hover {
-  background: #ddd;
-}
 </style>

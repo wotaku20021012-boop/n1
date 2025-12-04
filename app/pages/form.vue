@@ -1,79 +1,72 @@
 <template>
-  <div class="form-page">
+  <div class="form-panel">
+    <h2>相談する（フォーム形式）</h2>
 
-    <h2 class="title">フォーム入力</h2>
+     <NuxtLink
+  to="/"
+  class="home-button"
+>
+  ホームへ戻る
+</NuxtLink>
 
-    <!-- ▼ ChatForm コンポーネントを使用 -->
-    <ChatForm @submit="handleSubmit" />
+    <form @submit.prevent="submitForm">
+      <label>お悩み：</label>
+      <input v-model="problem" placeholder="乾燥 / ニキビ など" />
 
-    <!-- ▼ ホームに戻るボタン -->
-    <div class="back-area">
-      <NuxtLink to="/" class="back-btn">🏠 ホームに戻る</NuxtLink>
+      <label>好みの仕上がり：</label>
+      <input v-model="preference" placeholder="ツヤ / マット など" />
+
+      <button type="submit">送信</button>
+    </form>
+
+    <div v-if="result">
+      <h3>おすすめ商品</h3>
+
+      <div v-if="Array.isArray(result)">
+        <ul>
+          <li v-for="item in result" :key="item.id">
+            {{ item.name }}（{{ item.price }}円）
+          </li>
+        </ul>
+      </div>
+
+      <p v-else>{{ result }}</p>
     </div>
-
-    <!-- ▼ 結果表示 -->
-    <div v-if="result" class="result-box">
-      <p>あなたにおすすめの商品は「{{ result }}」です！ 🎉</p>
-    </div>
-
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from "vue";
+import axios from "axios";
 
-const result = ref<string | null>(null);
+const API = "http://localhost:5215/api/form/submit";
 
-function handleSubmit(data: { problem: string; preference: string }) {
-  console.log("フォーム送信:", data);
+const problem = ref("");
+const preference = ref("");
+const result = ref(null);
 
-  if (data.problem.includes("乾燥")) {
-    result.value = "高保湿クリーム";
-  } else if (data.preference.includes("ツヤ")) {
-    result.value = "ツヤ系ファンデーション";
-  } else {
-    result.value = "ベーシックケアセット";
-  }
+async function submitForm() {
+  const res = await axios.post(API, {
+    problem: problem.value,
+    preference: preference.value,
+  });
+
+  result.value = res.data.result;
 }
 </script>
 
 <style scoped>
-.form-page {
-  max-width: 500px;
-  margin: 40px auto;
-  padding: 20px;
-}
-
-.title {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.back-area {
-  margin-top: 40px;
-  text-align: center;
-}
-
 .back-btn {
+  margin-bottom: 12px;
+}
+.home-button {
   display: inline-block;
-  padding: 10px 20px;
-  background: #eee;
-  border-radius: 6px;
-  text-decoration: none;
-  color: #333;
-  border: 1px solid #ccc;
-}
-
-.back-btn:hover {
-  background: #ddd;
-}
-
-.result-box {
-  margin-top: 30px;
-  padding: 16px;
-  background: #f9fbfc;
+  padding: 10px 18px;
+  background: #4a90e2;
+  color: white;
   border-radius: 8px;
-  border: 1px solid #e4e4e4;
   text-align: center;
+  font-weight: bold;
+  text-decoration: none;
 }
 </style>
