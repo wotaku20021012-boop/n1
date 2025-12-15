@@ -2,16 +2,15 @@
   <div class="form-panel">
     <h2>相談する（フォーム形式）</h2>
 
-     <NuxtLink
-  to="/"
-  class="home-button"
->
-  ホームへ戻る
-</NuxtLink>
-
     <form @submit.prevent="submitForm">
       <label>お悩み：</label>
       <input v-model="problem" placeholder="乾燥 / ニキビ など" />
+
+      <label>好みの仕上がり：</label>
+      <input v-model="preference" placeholder="ツヤ / マット など" />
+
+      <label>希望の価格帯：</label>
+      <input v-model="preference" placeholder="3,000円以内など" />
 
       <label>好みの仕上がり：</label>
       <input v-model="preference" placeholder="ツヤ / マット など" />
@@ -25,6 +24,7 @@
       <div v-if="Array.isArray(result)">
         <ul>
           <li v-for="item in result" :key="item.id">
+            <img :src="item.imageUrl" alt="" />
             {{ item.name }}（{{ item.price }}円）
           </li>
         </ul>
@@ -33,6 +33,12 @@
       <p v-else>{{ result }}</p>
     </div>
   </div>
+       <NuxtLink
+  to="/"
+  class="home-button"
+>
+  ホームへ戻る
+</NuxtLink>
 </template>
 
 <script setup>

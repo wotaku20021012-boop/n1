@@ -2,15 +2,6 @@
   <div class="chat-panel">
     <h2>相談する（チャット形式）</h2>
 
-    <!-- 戻るボタン -->
-    <NuxtLink
-  to="/"
-  class="home-button"
->
-  ホームへ戻る
-</NuxtLink>
-
-
     <!-- 質問 -->
     <div v-if="question">
       <p>{{ question.text }}</p>
@@ -27,12 +18,20 @@
       <h3>おすすめ商品</h3>
       <ul>
         <li v-for="item in result" :key="item.id">
+          <img :src="item.imageUrl" alt="" width="200px" height="150px" />
           {{ item.name }}（{{ item.price }}円）
         </li>
       </ul>
       <button @click="reset">もう一度</button>
     </div>
   </div>
+      <!-- 戻るボタン -->
+    <NuxtLink
+  to="/"
+  class="home-button"
+>
+  ホームへ戻る
+</NuxtLink>
 </template>
 
 <script setup>
