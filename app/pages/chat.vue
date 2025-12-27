@@ -19,6 +19,7 @@
       <ul>
         <li v-for="item in result" :key="item.id">
           <img :src="item.imageUrl" alt="" width="200px" height="150px" />
+          <strong>{{ item.brand }}</strong><br />
           {{ item.name }}（{{ item.price }}円）
         </li>
       </ul>
